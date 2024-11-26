@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Exceptions;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -7,7 +8,7 @@ namespace Application.Commands
 {
     public class CreateAccount
     {
-        public record CreateAccountCommand(string Name, string ICNumber, string MobileNumber, string Email, string Pin, bool AcceptTerms, bool EnableBiometric) : IRequest<CreateAccountResponse>;
+        public record CreateAccountCommand(string Name, string ICNumber, string MobileNumber, string Email, string Pin, string ConfirmPin, bool AcceptTerms, bool EnableBiometric) : IRequest<CreateAccountResponse>;
         
         public record CreateAccountResponse(Guid Id, string Name, string ICNumber, string MobileNumber, string Email);
 
@@ -28,7 +29,7 @@ namespace Application.Commands
             {
                 var existingCustomer = await _accountRepository.FindByICNumberAsync(request.ICNumber);
                 if (existingCustomer != null)
-                    throw new InvalidOperationException("Customer with this IC number already exists.");
+                    throw new CustomException("Customer with this IC number already exists.", ExceptionCodes.AccountExist.ToString(), 400);
 
                 var pinHash = BCrypt.Net.BCrypt.HashPassword(request.Pin);
 

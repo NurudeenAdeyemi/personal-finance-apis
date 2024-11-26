@@ -5,6 +5,7 @@ using FluentValidation;
 using Infrastructure.Logging;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Validations;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -29,6 +30,7 @@ try
     builder.Services.AddScoped<IAccountRepository, AccountRepository>();
     builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CreateAccount).Assembly));
     builder.Services.AddValidatorsFromAssemblyContaining<CreateAccountValidator>();
+    builder.Services.AddValidators();
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddLogging(configure => configure.AddSerilog());
