@@ -1,3 +1,4 @@
+using Api.Middleware;
 using Application.Commands;
 using Application.FluentValidations;
 using Application.Interfaces.Repositories;
@@ -43,7 +44,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
+    app.UseMiddleware<ExceptionMiddleware>();
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
