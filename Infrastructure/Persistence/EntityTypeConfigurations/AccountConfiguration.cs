@@ -39,8 +39,16 @@ namespace Infrastructure.Persistence.EntityTypeConfigurations
                 .HasColumnName("pin_hash")
                 .HasColumnType("nvarchar(255)");
 
-            builder.Property(a => a.IsBiometricEnabled)
-                .HasColumnName("is_biometric_enabled")
+            builder.Property(a => a.MobileNumberConfirmed)
+                .HasColumnName("mobile_number_confirmed")
+                .HasColumnType("bit");
+
+            builder.Property(a => a.EmailConfirmed)
+                .HasColumnName("email_confirmed")
+                .HasColumnType("bit");
+
+            builder.Property(a => a.BiometricEnabled)
+                .HasColumnName("biometric_enabled")
                 .HasColumnType("bit");
 
             builder.Property(a => a.CreatedAt)

@@ -2,5 +2,7 @@ namespace Application.Exceptions;
 
 public enum ExceptionCodes
 {
-    AccountExist
+    AccountExist,
+    AccountNotExist,
+    InvalidVerifyType
 }

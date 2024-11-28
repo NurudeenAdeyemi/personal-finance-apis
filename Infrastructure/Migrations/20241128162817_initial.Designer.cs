@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241126164952_initial")]
+    [Migration("20241128162817_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -32,6 +32,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("account_id");
 
+                    b.Property<bool>("BiometricEnabled")
+                        .HasColumnType("bit")
+                        .HasColumnName("biometric_enabled");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -43,19 +47,23 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("email");
 
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit")
+                        .HasColumnName("email_confirmed");
+
                     b.Property<string>("ICNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("ic_number");
 
-                    b.Property<bool>("IsBiometricEnabled")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_biometric_enabled");
-
                     b.Property<string>("MobileNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("mobile_number");
+
+                    b.Property<bool>("MobileNumberConfirmed")
+                        .HasColumnType("bit")
+                        .HasColumnName("mobile_number_confirmed");
 
                     b.Property<string>("Name")
                         .IsRequired()

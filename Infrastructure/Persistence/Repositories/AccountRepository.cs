@@ -19,6 +19,12 @@ namespace Infrastructure.Persistence.Repositories
             await _context.Accounts.AddAsync(account);
             return account;
         }
+
+        public Task<Account> UpdateAsync(Account account)
+        {
+            _context.Accounts.Update(account);
+            return Task.FromResult(account);
+        }
         public async Task<Account?> FindByICNumberAsync(string icNumber)
         {
             return await _context.Accounts.FirstOrDefaultAsync(c => c.ICNumber == icNumber);
