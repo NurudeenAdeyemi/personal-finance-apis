@@ -29,11 +29,11 @@ namespace Application.Commands
             {
                 var account = await _accountRepository.FindByICNumberAsync(request.ICNumber);
                 if (account == null)
-                    throw new CustomException("Customer with this IC number does not exists.", ExceptionCodes.AccountNotExist.ToString(), 404);
+                    throw new CustomException("There is no account registered with the IC number", ExceptionCodes.AccountNotExist.ToString(), 404);
 
-                if(!account.MobileNumberConfirmed || !account.EmailConfirmed)
+                if(!account.TermAccepted)
                 {
-                    throw new CustomException("Verify MobileNumber and Email.", ExceptionCodes.VerificationNeeded.ToString(), 400);
+                    throw new CustomException("Terms and condition must be accepted", ExceptionCodes.VerificationNeeded.ToString(), 400);
                 }
 
                 var pinHash = BCrypt.Net.BCrypt.HashPassword(request.Pin);

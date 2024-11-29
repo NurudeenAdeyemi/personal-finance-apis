@@ -38,23 +38,24 @@ namespace Application.Commands
                 var account = await _accountRepository.FindByICNumberAsync(request.ICNumber);
                 if (account == null)
                 {
-                    _logger.LogInformation("Customer with this IC number already exists: {ICNumber}", request.ICNumber);
-                    throw new CustomException("Customer with this IC number does not exist.", ExceptionCodes.AccountNotExist.ToString(), 404);
+                    _logger.LogInformation("There is no account registered with the IC number: {ICNumber}", request.ICNumber);
+                    throw new CustomException("There is no account registered with the IC number", ExceptionCodes.AccountNotExist.ToString(), 404);
                 }
 
+                
 
                 var cacheKey = $"{request.ICNumber}_{request.Type}";
 
                 if (!_memoryCache.TryGetValue(cacheKey, out string cachedCode))
                 {
-                    _logger.LogWarning("Verification code for ICNumber {ICNumber} and Type {Type} not found or expired.", request.ICNumber, request.Type);
-                    throw new CustomException("Verification code not found or expired.", ExceptionCodes.CodeExpired.ToString(), 400);
+                    _logger.LogWarning("Incorrect OTP");
+                    throw new CustomException("Incorrect OTP", ExceptionCodes.CodeExpired.ToString(), 400);
                 }
 
                 if (cachedCode != request.Code)
                 {
-                    _logger.LogWarning("Invalid verification code provided for ICNumber {ICNumber} and Type {Type}.", request.ICNumber, request.Type);
-                    throw new CustomException("Invalid verification code.", ExceptionCodes.InvalidCode.ToString(), 400);
+                    _logger.LogWarning("Incorrect OTP");
+                    throw new CustomException("Incorrect OTP", ExceptionCodes.InvalidCode.ToString(), 400);
                 }
 
                 switch (request.Type)
@@ -65,13 +66,17 @@ namespace Application.Commands
                         break;
 
                     case VerificationType.Email:
+                        if (!account.MobileNumberConfirmed)
+                        {
+                            throw new CustomException("Mobile number must be verified first", ExceptionCodes.VerificationNeeded.ToString(), 400);
+                        }
                         account.ConfirmEmail();
                         _logger.LogInformation("Email verified successfully for ICNumber {ICNumber}.", request.ICNumber);
                         break;
 
                     default:
-                        _logger.LogError("Invalid verification type provided for ICNumber {ICNumber}.", request.ICNumber);
-                        throw new CustomException("Invalid verification type.", ExceptionCodes.InvalidVerifyType.ToString(), 400);
+                        _logger.LogError("Incorrect OTP");
+                        throw new CustomException("Incorrect OTP", ExceptionCodes.InvalidVerifyType.ToString(), 400);
                 }
 
                 await _accountRepository.UpdateAsync(account);

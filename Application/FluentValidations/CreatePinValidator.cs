@@ -25,7 +25,7 @@ namespace Application.FluentValidations
                 .NotEmpty()
                 .WithMessage("Confirm Pin is required.")
                 .Equal(x => x.Pin)
-                .WithMessage("Confirm Pin must match Pin.")
+                .WithMessage("Unmatched Pin, Please enter your Pin again")
                 .Matches(@"^\d{6}$")
                 .WithMessage("Pin must contain only numeric digits.");
         }

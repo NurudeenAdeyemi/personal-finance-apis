@@ -12,6 +12,7 @@
         public string? PinHash { get; private set; }
         public bool PinSetup { get; private set; }
         public bool BiometricEnabled { get; private set; }
+        public bool TermAccepted { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
@@ -49,6 +50,12 @@
         public void UpdateBiometricSetting(bool enableBiometric)
         {
             BiometricEnabled = enableBiometric;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void AcceptTerm(bool term)
+        {
+            TermAccepted = term;
             UpdatedAt = DateTime.UtcNow;
         }
     }

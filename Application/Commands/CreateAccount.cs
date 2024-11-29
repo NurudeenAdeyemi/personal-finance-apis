@@ -35,8 +35,8 @@ namespace Application.Commands
                 var existingCustomer = await _accountRepository.FindByICNumberAsync(request.ICNumber);
                 if (existingCustomer != null)
                 {
-                    _logger.LogInformation("Customer with this IC number already exists: {ICNumber}", request.ICNumber);
-                    throw new CustomException("Customer with this IC number already exists.", ExceptionCodes.AccountExist.ToString(), 400);
+                    _logger.LogInformation("Account already exists: {ICNumber}", request.ICNumber);
+                    throw new CustomException("Account already exists.", ExceptionCodes.AccountExist.ToString(), 400);
                 }
 
                 var account = new Account(request.Name, request.ICNumber, request.MobileNumber, request.Email);

@@ -18,8 +18,13 @@ try
     var builder = WebApplication.CreateBuilder(args);
     var configuration = builder.Configuration;
 
-    builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
-
+    builder.Host.UseSerilog((context, services, configuration) =>
+    {
+        configuration
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services) 
+            .Enrich.FromLogContext();
+    });
     // Add services to the container.
 
     builder.Services.AddControllers();
@@ -39,6 +44,7 @@ try
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
+    app.UseSerilogRequestLogging();
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();

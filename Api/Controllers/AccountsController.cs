@@ -45,11 +45,11 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{icNumber}")]
-        public async Task<IActionResult> GetAccount(string icNumber)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] string icNumber)
         {
-            var request = await _mediator.Send(new GetAccountQuery(icNumber));
-            return Ok(request);
+            var result = await _mediator.Send(new GetAccountQuery(icNumber));
+            return Ok(result);
         }
     }
 }
