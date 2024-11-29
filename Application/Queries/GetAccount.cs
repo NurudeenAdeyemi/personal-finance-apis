@@ -43,7 +43,7 @@ namespace Application.Queries
 
                 return Result<AccountResponse>.Success(
                      response,
-                     $"Customer account registered successfully: {request.ICNumber}. Verification codes sent to mobile and email.");
+                     $"Customer account retrieved successfully: {request.ICNumber}. Verification codes sent to mobile and email.");
             }
 
             private static string GenerateVerificationCode()
