@@ -4,5 +4,8 @@ public enum ExceptionCodes
 {
     AccountExist,
     AccountNotExist,
-    InvalidVerifyType
+    InvalidVerifyType,
+    CodeExpired,
+    InvalidCode,
+    VerificationNeeded
 }

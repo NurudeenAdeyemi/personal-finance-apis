@@ -35,7 +35,6 @@ namespace Infrastructure.Persistence.EntityTypeConfigurations
                 .HasColumnType("nvarchar(150)");
 
             builder.Property(a => a.PinHash)
-                .IsRequired()
                 .HasColumnName("pin_hash")
                 .HasColumnType("nvarchar(255)");
 

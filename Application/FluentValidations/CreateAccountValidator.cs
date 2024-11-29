@@ -1,5 +1,9 @@
-﻿using FluentValidation;
+﻿using Application.Commands;
+using Application.DTOs;
+using FluentValidation;
+using MediatR;
 using static Application.Commands.CreateAccount;
+using static Application.Commands.CreatePin;
 
 namespace Application.FluentValidations
 {
@@ -7,23 +11,23 @@ namespace Application.FluentValidations
     {
         public CreateAccountValidator()
         {
-            RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.ICNumber).NotEmpty();
-            RuleFor(x => x.MobileNumber).NotEmpty();
-            RuleFor(x => x.Email).NotEmpty().EmailAddress();
-            RuleFor(x => x.AcceptTerms).Equal(true).WithMessage("You must accept the terms.");
-            RuleFor(x => x.Pin)
-            .NotEmpty()
-            .WithMessage("Pin is required.")
-            .Length(6)
-            .WithMessage("Pin must be exactly 6 digits.");
-
-            RuleFor(x => x.ConfirmPin)
+            RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage("Confirm Pin is required.")
-                .Equal(x => x.Pin)
-                .WithMessage("Confirm Pin must match Pin.");
+                .WithMessage("Name is required.");
+
+            RuleFor(x => x.ICNumber)
+                .NotEmpty()
+                .WithMessage("ICNumber is required.");
+
+            RuleFor(x => x.MobileNumber)
+                .NotEmpty()
+                .WithMessage("Mobile number is required.");
+
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .WithMessage("Email is required.")
+                .EmailAddress()
+                .WithMessage("Invalid email format.");
         }
     }
-
 }

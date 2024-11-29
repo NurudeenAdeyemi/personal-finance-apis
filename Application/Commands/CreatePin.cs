@@ -1,6 +1,6 @@
-﻿using Application.Exceptions;
+﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces.Repositories;
-using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -8,10 +8,11 @@ namespace Application.Commands
 {
     public class CreatePin
     {
-        public record CreatePinCommand(string ICNumber, string Pin, string ConfirmPin) : IRequest<string>;
+        public record CreatePinCommand(string ICNumber, string Pin, string ConfirmPin) : IRequest<Result<AccountResponse>>;
 
+        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool PinSetup, bool BiometricEnabled);
 
-        public class Handler : IRequestHandler<CreatePinCommand, string>
+        public class Handler : IRequestHandler<CreatePinCommand, Result<AccountResponse>>
         {
             private readonly IAccountRepository _accountRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -24,22 +25,28 @@ namespace Application.Commands
                 _logger = logger;
             }
 
-            public async Task<string> Handle(CreatePinCommand request, CancellationToken cancellationToken)
+            public async Task<Result<AccountResponse>> Handle(CreatePinCommand request, CancellationToken cancellationToken)
             {
-                var existingCustomer = await _accountRepository.FindByICNumberAsync(request.ICNumber);
-                if (existingCustomer == null)
+                var account = await _accountRepository.FindByICNumberAsync(request.ICNumber);
+                if (account == null)
                     throw new CustomException("Customer with this IC number does not exists.", ExceptionCodes.AccountNotExist.ToString(), 404);
+
+                if(!account.MobileNumberConfirmed || !account.EmailConfirmed)
+                {
+                    throw new CustomException("Verify MobileNumber and Email.", ExceptionCodes.VerificationNeeded.ToString(), 400);
+                }
 
                 var pinHash = BCrypt.Net.BCrypt.HashPassword(request.Pin);
 
-                existingCustomer.SetPin(pinHash);
+                account.SetPin(pinHash);
 
-                await _accountRepository.UpdateAsync(existingCustomer);
+                await _accountRepository.UpdateAsync(account);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 _logger.LogInformation("Customer account pin created successfully");
+                var response = new AccountResponse(account.Id, account.Name, account.ICNumber, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.PinSetup, account.BiometricEnabled);
 
-                return "Customer account pin created successfully";
+                return Result<AccountResponse>.Success(response, $"Customer pin created successfully");
             }
         }
     }
