@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241129073237_jjjj")]
-    partial class jjjj
+    [Migration("20241129103521_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,9 @@ namespace Infrastructure.Migrations
                         .HasColumnName("pin_hash");
 
                     b.Property<bool>("PinSetup")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TermAccepted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedAt")

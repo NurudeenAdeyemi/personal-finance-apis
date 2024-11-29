@@ -74,6 +74,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("PinSetup")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("TermAccepted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")

@@ -12,7 +12,7 @@ namespace Application.Queries
     {
         public record GetAccountQuery(string ICNumber) : IRequest<Result<AccountResponse>>;
 
-        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool PinSetup, bool BiometricEnabled);
+        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool TermAccepted, bool PinSetup, bool BiometricEnabled);
 
         public class GetAccountHandler : IRequestHandler<GetAccountQuery, Result<AccountResponse>>
         {
@@ -39,7 +39,7 @@ namespace Application.Queries
                 _memoryCache.Set(GetMobileCacheKey(request.ICNumber), mobileVerificationCode, TimeSpan.FromMinutes(10));
                 _memoryCache.Set(GetEmailCacheKey(request.ICNumber), emailVerificationCode, TimeSpan.FromMinutes(10));
 
-                var response = new AccountResponse(account.Id, account.ICNumber, account.Name, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.PinSetup, account.BiometricEnabled);
+                var response = new AccountResponse(account.Id, account.ICNumber, account.Name, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.TermAccepted, account.PinSetup, account.BiometricEnabled);
 
                 return Result<AccountResponse>.Success(
                      response,

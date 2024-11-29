@@ -24,6 +24,13 @@ namespace Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] string icNumber)
+        {
+            var result = await _mediator.Send(new GetAccountQuery(icNumber));
+            return Ok(result);
+        }
+
         [HttpPatch("verify")]
         public async Task<IActionResult> Verify([FromBody] VerifyPhoneOrEmail.VerifyPhoneOrEmailCommand command)
         {
@@ -38,17 +45,17 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        [HttpPatch("toggle-biomteric")]
+        [HttpPatch("toggle-biometric")]
         public async Task<IActionResult> EnableBiometric([FromBody] EnableBiometric.EnableBiometricCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] string icNumber)
+        [HttpPatch("terms")]
+        public async Task<IActionResult> AcceptTerm([FromBody] AcceptTerm.AcceptTermCommand command)
         {
-            var result = await _mediator.Send(new GetAccountQuery(icNumber));
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
     }

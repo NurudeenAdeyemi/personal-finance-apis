@@ -13,7 +13,7 @@ namespace Application.Commands
     {
         public record CreateAccountCommand(string Name, string ICNumber, string MobileNumber, string Email) : IRequest<Result<AccountResponse>>;
 
-        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool PinSetup, bool BiometricEnabled);
+        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool TermAccepted, bool PinSetup, bool BiometricEnabled);
 
         public class Handler : IRequestHandler<CreateAccountCommand, Result<AccountResponse>>
         {
@@ -61,6 +61,7 @@ namespace Application.Commands
                     account.Email,
                     account.MobileNumberConfirmed,
                     account.EmailConfirmed,
+                    account.TermAccepted,
                     account.PinSetup,
                     account.BiometricEnabled);
 

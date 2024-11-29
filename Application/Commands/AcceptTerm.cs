@@ -10,7 +10,7 @@ namespace Application.Commands
     {
         public record AcceptTermCommand(string ICNumber, bool Term) : IRequest<Result<AccountResponse>>;
 
-        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool PinSetup, bool BiometricEnabled);
+        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool TermAccepted, bool PinSetup, bool BiometricEnabled);
 
         public class Handler : IRequestHandler<AcceptTermCommand, Result<AccountResponse>>
         {
@@ -44,7 +44,7 @@ namespace Application.Commands
                 await _accountRepository.UpdateAsync(account);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                var response = new AccountResponse(account.Id, account.Name, account.ICNumber, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.PinSetup, account.BiometricEnabled);
+                var response = new AccountResponse(account.Id, account.Name, account.ICNumber, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.TermAccepted, account.PinSetup, account.BiometricEnabled);
                 return Result<AccountResponse>.Success(response, $"Customer accepted terms and conditions successfully");
             }
         }

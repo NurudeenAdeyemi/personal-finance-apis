@@ -10,7 +10,7 @@ namespace Application.Commands
     {
         public record EnableBiometricCommand(string ICNumber, bool Enable) : IRequest<Result<AccountResponse>>;
 
-        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool PinSetup, bool BiometricEnabled);
+        public record AccountResponse(Guid Id, string ICNumber, string Name, string MobileNumber, string Email, bool MobileNumberConfirmed, bool EmailConfirmed, bool TermAccepted, bool PinSetup, bool BiometricEnabled);
 
         public class Handler : IRequestHandler<EnableBiometricCommand, Result<AccountResponse>>
         {
@@ -38,7 +38,7 @@ namespace Application.Commands
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 _logger.LogInformation("Customer biometric enabled successfully");
-                var response = new AccountResponse(account.Id, account.Name, account.ICNumber, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.PinSetup, account.BiometricEnabled);
+                var response = new AccountResponse(account.Id, account.Name, account.ICNumber, account.MobileNumber, account.Email, account.MobileNumberConfirmed, account.EmailConfirmed, account.TermAccepted, account.PinSetup, account.BiometricEnabled);
                 return Result<AccountResponse>.Success(response, $"Customer biometric enabled successfully");
             }
         }
